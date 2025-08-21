@@ -1,9 +1,10 @@
-from app.config.settings import Settings
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+
+from config.settings import Settings
 
 settings = Settings()
 
-engine = create_async_engine(Settings.DATABASE_URL)
+engine = create_async_engine(settings.DATABASE_URL)
 
 
 async def get_session():

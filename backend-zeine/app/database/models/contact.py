@@ -1,7 +1,7 @@
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.database.models.db_registry import table_registry
 
+from database.models.db_registry import table_registry
 
 
 @table_registry.mapped_as_dataclass

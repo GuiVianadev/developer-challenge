@@ -1,15 +1,17 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
+
+
 
 class UserCreateDTO(BaseModel):
-    name: str
+    name: str = Field(..., min_length=3, description="Name must have at least 2 characters")
     email: EmailStr
-    password: str
-
+    password: str = Field(..., min_length=8, description="Password must have at least 8 characters")
+    
 class UserResponseDTO(BaseModel):
     id: int
     name: str
     email: EmailStr
-    password: str
+
 
 class LoginDTO(BaseModel):
     email: EmailStr

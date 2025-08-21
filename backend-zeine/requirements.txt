@@ -8,3 +8,4 @@ sqlalchemy
 pydantic_settings
 psycopg
 psycopg2-binary
+passlib[bcrypt]
