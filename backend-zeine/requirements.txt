@@ -1,0 +1,10 @@
+fastapi[standard]
+pytest
+pytest-cov
+taskipy
+ruff
+alembic
+sqlalchemy
+pydantic_settings
+psycopg
+psycopg2-binary

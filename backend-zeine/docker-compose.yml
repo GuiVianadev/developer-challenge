@@ -1,0 +1,9 @@
+services:
+  desafio_database:
+    image: postgres
+    environment:
+      POSTGRES_USER: desafio_user
+      POSTGRES_DB: desafio_db
+      POSTGRES_PASSWORD: desafio_password
+    ports:
+      - "5432:5432"
