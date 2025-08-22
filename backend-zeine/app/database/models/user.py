@@ -1,7 +1,6 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from database.models.contact import Contact
 from database.models.db_registry import table_registry
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 @table_registry.mapped_as_dataclass
@@ -13,4 +12,4 @@ class User:
     email: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]
     contacts: Mapped[list["Contact"]] = relationship(
-        "Contact", init=False,back_populates="user")
+        "Contact", init=False, back_populates="user")

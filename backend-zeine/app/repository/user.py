@@ -1,9 +1,7 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
-from utils.security import hash_password
-
-from database.dtos.user import UserCreateDTO
 from database.models.user import User
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 
 class UserRepository:
@@ -13,17 +11,16 @@ class UserRepository:
     async def get_all_users(self):
         result = await self.db.execute(select(User))
         return result.scalars().all()
-    
+
     async def find_by_email(self, email: str) -> User | None:
         result = await self.db.execute(select(User).where(User.email == email))
         return result.scalar_one_or_none()
 
-
-    async def create_user(self, user_dto: UserCreateDTO):
+    async def create_user(self, user: User):
         user = User(
-            name=user_dto.name,
-            email=user_dto.email,
-            password=hash_password(user_dto.password)
+            name=user.name,
+            email=user.email,
+            password=user.password
         )
         self.db.add(user)
         await self.db.commit()

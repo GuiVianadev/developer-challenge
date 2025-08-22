@@ -1,16 +1,17 @@
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from  http import HTTPStatus
-from fastapi import Depends, HTTPException
-from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from sqlalchemy.ext.asyncio import AsyncSession
+from http import HTTPStatus
 from zoneinfo import ZoneInfo
-from jwt import decode, encode
-from sqlalchemy import select
-from jwt.exceptions import ExpiredSignatureError, PyJWTError
-from config.settings import Settings
+
 from config.database import get_session
+from config.settings import Settings
 from database.models.user import User
+from fastapi import Depends, HTTPException
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jwt import decode, encode
+from jwt.exceptions import ExpiredSignatureError, PyJWTError
+from passlib.context import CryptContext
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
@@ -20,10 +21,12 @@ settings = Settings()
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
-def verify_password(plain_password:str, hashed_password:str)-> bool:
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
-def create_access_token(data_payload:dict):
+
+def create_access_token(data_payload: dict):
     to_enconde = data_payload.copy()
 
     expire = datetime.now(tz=ZoneInfo("UTC")) + timedelta(
@@ -37,10 +40,11 @@ def create_access_token(data_payload:dict):
 
     return encoded_jwt
 
+
 async def get_current_user(
     session: AsyncSession = Depends(get_session),
     credentials: HTTPAuthorizationCredentials = Depends(security),
-): 
+):
     token = credentials.credentials
 
     credentials_exception = HTTPException(
@@ -61,7 +65,7 @@ async def get_current_user(
         raise credentials_exception
     except PyJWTError:
         raise credentials_exception
-    
+
     user = await session.scalar(select(User).where(User.email == email))
 
     return user

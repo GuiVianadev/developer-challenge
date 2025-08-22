@@ -1,7 +1,7 @@
+from database.models.db_registry import table_registry
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from database.models.db_registry import table_registry
 
 
 @table_registry.mapped_as_dataclass
@@ -15,4 +15,4 @@ class Contact:
     foto: Mapped[str] = mapped_column(nullable=True)
     reference: Mapped[str] = mapped_column(nullable=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    user: Mapped["User"] = relationship("User", back_populates="contacts")
+    user: Mapped["User"] = relationship("User", init=False, back_populates="contacts")
