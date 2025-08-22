@@ -1,11 +1,11 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import async_session
 
 from database.dtos.user import UserCreateDTO
 from repository.user import UserRepository
 
 
 class UserService:
-    def __init__(self, db: Session):
+    def __init__(self, db: async_session):
         self.repo = UserRepository(db)
 
     async def get_users(self):
