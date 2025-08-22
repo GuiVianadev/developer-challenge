@@ -9,7 +9,6 @@ class AuthRepository:
         self.db = db
 
     async def find_user_by_email(self, email: str) -> User | None:
-        """Busca usuário pelo email"""
         result = await self.db.execute(
             select(User).where(User.email == email)
         )

@@ -1,4 +1,4 @@
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from  http import HTTPStatus
 from fastapi import Depends, HTTPException
 from passlib.context import CryptContext
@@ -13,7 +13,7 @@ from config.database import get_session
 from database.models.user import User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=('auth/login'))
+security = HTTPBearer()
 settings = Settings()
 
 
@@ -39,8 +39,10 @@ def create_access_token(data_payload:dict):
 
 async def get_current_user(
     session: AsyncSession = Depends(get_session),
-    token: str = Depends(oauth2_scheme),
+    credentials: HTTPAuthorizationCredentials = Depends(security),
 ): 
+    token = credentials.credentials
+
     credentials_exception = HTTPException(
         status_code=HTTPStatus.UNAUTHORIZED,
         detail='Could not validate credentials',
