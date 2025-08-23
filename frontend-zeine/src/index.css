@@ -6,6 +6,23 @@
 
 /* biome-ignore lint/suspicious/noUnknownAtRules: ESS */
 @theme inline {
+
+  --color-brand-background-primary: #111111;
+  --color-brand-background-secondary: #181818;
+  --color-brand-background-tertiary: #303030;
+  
+  --color-brand-border-primary: #FFFFFF;
+  
+  --color-brand-content-primary: #FFFFFF;
+  --color-brand-content-body: #E2E2E2;
+  --color-brand-content-heading: #C6C6C6;
+  --color-brand-content-muted: #5E5E5E;
+  --color-brand-content-placeholder: #777777;
+  --color-brand-content-inverse: #111111;
+  
+  --color-brand-accent-brand: #C4F120;
+  --color-brand-accent-red: #E61E32;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -120,5 +137,8 @@
   body {
     /* biome-ignore lint/suspicious/noUnknownAtRules: ESS */
     @apply bg-background text-foreground;
+  }
+  html, body, * {
+    font-family: "Schibsted Grotesk", system-ui, -apple-system, sans-serif;
   }
 }
