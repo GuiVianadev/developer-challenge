@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 export function SignIn() {
   return (
     <div>
-      <div>SignIn</div>
-      <Link to={'/register'}>Fazer Registro</Link>
+      <div className="text-white">SignIn</div>
+      <Link to={'/auth/sign-up'}>Fazer Registro</Link>
     </div>
   );
 }
