@@ -13,9 +13,9 @@ export function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />} index />
-          <Route element={<AuthLayout />} path={'/auth'}>
-            <Route element={<SignIn />} path="sign-in" />
-            <Route element={<SignUp />} path="sign-up" />
+          <Route element={<AuthLayout />}>
+            <Route element={<SignIn />} path="/sign-in" />
+            <Route element={<SignUp />} path="/sign-up" />
           </Route>
         </Routes>
       </BrowserRouter>
