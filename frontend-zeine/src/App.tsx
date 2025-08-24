@@ -8,21 +8,25 @@ import { Contacts } from './pages/app/contacts/contacts';
 import { Settings } from './pages/app/settings';
 import { SignIn } from './pages/auth/sign-in';
 import { SignUp } from './pages/auth/sign-up';
+import { ProtectedRoute } from './pages/protectedRoute';
 
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />} path="/">
-            <Route element={<Contacts />} index />
-            <Route element={<Settings />} path="/settings" />
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout />} path="/">
+              <Route element={<Contacts />} index />
+              <Route element={<Settings />} path="/settings" />
+            </Route>
           </Route>
 
           <Route element={<AuthLayout />}>
             <Route element={<SignIn />} path="/sign-in" />
             <Route element={<SignUp />} path="/sign-up" />
           </Route>
+
           <Route element={<NotFound />} path="*" />
         </Routes>
       </BrowserRouter>

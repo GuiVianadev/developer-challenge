@@ -1,7 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
+import { signUp } from '@/api/sign-up';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,6 +25,9 @@ const signUpForm = z
 type SignUpForm = z.infer<typeof signUpForm>;
 
 export function SignUp() {
+  const navigate = useNavigate();
+  const [apiError, setApiError] = useState<string>('');
+
   const {
     register,
     handleSubmit,
@@ -31,11 +37,54 @@ export function SignUp() {
     mode: 'onSubmit',
   });
 
-  async function handleSignIn(data: SignUpForm) {
-    const { name, email, password } = data;
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    console.log({ name, email, password });
+  const { mutateAsync: registerUser } = useMutation({
+    mutationFn: signUp,
+  });
+
+  async function handleSignUp(data: SignUpForm) {
+    setApiError(''); // Limpa erro anterior
+
+    try {
+      await registerUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+
+      // Redireciona para login após cadastro bem-sucedido
+      navigate('/sign-in');
+    } catch (error) {
+      // Verifica se é erro de email já existente
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as {
+          response: { data: { detail: string | Array<{ msg: string }> } };
+        };
+        const errorDetail = axiosError.response?.data?.detail;
+
+        if (
+          typeof errorDetail === 'string' &&
+          errorDetail.includes('already exists')
+        ) {
+          setApiError('Este e-mail já está cadastrado');
+          return;
+        }
+
+        if (Array.isArray(errorDetail)) {
+          const emailError = errorDetail.find(
+            (err) => err.msg && err.msg.includes('already exists')
+          );
+          if (emailError) {
+            setApiError('Este e-mail já está cadastrado');
+            return;
+          }
+        }
+      }
+
+      // Erro genérico para qualquer outro caso
+      setApiError('Erro ao criar conta');
+    }
   }
+
   return (
     <div className="flex min-h-full w-full flex-col items-center justify-center bg-brand-background-secondary px-22 py-10">
       <div>
@@ -52,9 +101,9 @@ export function SignUp() {
             </h1>
             <form
               className="flex w-80 flex-col gap-4"
-              onSubmit={handleSubmit(handleSignIn)}
+              onSubmit={handleSubmit(handleSignUp)}
             >
-              <div className="space-y-5">
+              <div className="space-y-2">
                 <Label htmlFor="name">Nome</Label>
                 <Input
                   className="w-80"
@@ -64,7 +113,8 @@ export function SignUp() {
                   {...register('name')}
                 />
               </div>
-              <div className="space-y-5">
+
+              <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   className="w-80"
@@ -74,7 +124,8 @@ export function SignUp() {
                   {...register('email')}
                 />
               </div>
-              <div className="space-y-5">
+
+              <div className="space-y-2">
                 <Label htmlFor="password">Senha</Label>
                 <Input
                   className="w-80"
@@ -84,7 +135,8 @@ export function SignUp() {
                   {...register('password')}
                 />
               </div>
-              <div className="space-y-5">
+
+              <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Repetir a senha</Label>
                 <Input
                   className="w-80"
@@ -95,17 +147,27 @@ export function SignUp() {
                 />
               </div>
 
-              {Object.values(errors).length > 0 && (
+              {/* Exibe todos os erros no final do formulário */}
+              {(Object.values(errors).length > 0 || apiError) && (
                 <div className="mt-4 space-y-1">
-                  {Object.values(errors).map((err, idx) => (
+                  {/* Erros de validação */}
+                  {Object.values(errors).map((err, idError) => (
                     <p
                       className="flex gap-2 text-brand-content-body text-sm"
-                      key={idx}
+                      key={idError}
                     >
                       <img alt="simbolo de X" src={xSvg} />
                       {err?.message?.toString()}
                     </p>
                   ))}
+
+                  {/* Erro da API */}
+                  {apiError && (
+                    <p className="flex gap-2 text-brand-content-body text-sm">
+                      <img alt="simbolo de X" src={xSvg} />
+                      {apiError}
+                    </p>
+                  )}
                 </div>
               )}
 
@@ -114,7 +176,7 @@ export function SignUp() {
                 disabled={isSubmitting}
                 type="submit"
               >
-                Criar conta
+                {isSubmitting ? 'Criando...' : 'Criar conta'}
               </Button>
             </form>
           </div>
