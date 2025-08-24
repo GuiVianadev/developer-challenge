@@ -4,6 +4,7 @@ from routes.auth import router as auth_router
 from routes.user import router as user_router
 from routes.contacts import router as contacts_router
 
+
 app = FastAPI()
 
 origins = [
