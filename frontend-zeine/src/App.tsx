@@ -1,5 +1,6 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { queryClient } from './lib/react-query';
 import { AppLayout } from './pages/_layouts/app';
 import { AuthLayout } from './pages/_layouts/auth';
 import { NotFound } from './pages/404';
@@ -7,8 +8,6 @@ import { Contacts } from './pages/app/contacts/contacts';
 import { Settings } from './pages/app/settings';
 import { SignIn } from './pages/auth/sign-in';
 import { SignUp } from './pages/auth/sign-up';
-
-const queryClient = new QueryClient();
 
 export function App() {
   return (
