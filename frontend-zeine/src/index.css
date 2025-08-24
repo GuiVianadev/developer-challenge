@@ -142,3 +142,8 @@
     font-family: "Schibsted Grotesk", system-ui, -apple-system, sans-serif;
   }
 }
+
+/* esconder scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
