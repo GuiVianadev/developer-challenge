@@ -1,7 +1,9 @@
 import { LogOut, Settings, UserCircle2Icon } from 'lucide-react';
 import LogoApp from '../assets/logoApp.svg';
+import { getUserFromToken } from '../lib/jwt';
 import { NavLink } from './nav-link';
 export function Header() {
+  const user = getUserFromToken();
   return (
     <header className="flex h-190 flex-col items-center justify-between p-4">
       <div>
@@ -25,7 +27,7 @@ export function Header() {
           Logado como:
         </p>
         <span className="text-brand-content-body text-xs">
-          Gdas958i@gmail.com
+          {user?.email || 'E-mail não encontrado'}
         </span>
       </div>
     </header>
