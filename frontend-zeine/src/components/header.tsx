@@ -1,6 +1,7 @@
 import { LogOut, Settings, UserCircle2Icon } from 'lucide-react';
 import LogoApp from '../assets/logoApp.svg';
 import { getUserFromToken } from '../lib/jwt';
+import { LogoutButton } from './logoutButton';
 import { NavLink } from './nav-link';
 export function Header() {
   const user = getUserFromToken();
@@ -17,9 +18,9 @@ export function Header() {
         <NavLink to={'/settings'}>
           <Settings className="h-6 w-6" />
         </NavLink>
-        <NavLink to={'/logout'}>
+        <LogoutButton>
           <LogOut className="h-6 w-6" />
-        </NavLink>
+        </LogoutButton>
       </nav>
 
       <div>

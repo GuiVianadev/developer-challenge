@@ -119,7 +119,6 @@ export function ContactEdit({ contact }: ContactEditProps) {
           </Button>
         </div>
 
-        {/* Formulário */}
         <form
           className="flex w-80 flex-col gap-4"
           onSubmit={handleSubmit(onSubmit)}

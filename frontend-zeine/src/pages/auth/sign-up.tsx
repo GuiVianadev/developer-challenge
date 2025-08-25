@@ -10,11 +10,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import xSvg from '../../assets/x.svg';
 
+const MIN_NAME = 3;
+const MIN_PASSWORD = 8;
+
 const signUpForm = z
   .object({
-    name: z.string().min(3, 'Nome muito curto'),
+    name: z.string().min(MIN_NAME, 'Nome muito curto'),
     email: z.email('E-mail inválido'),
-    password: z.string().min(8, 'Pelo menos 8 caracteres'),
+    password: z.string().min(MIN_PASSWORD, 'Pelo menos 8 caracteres'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -41,47 +44,43 @@ export function SignUp() {
     mutationFn: signUp,
   });
 
-  async function handleSignUp(data: SignUpForm) {
-    setApiError(''); // Limpa erro anterior
+  function extractApiError(error: unknown): string {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as {
+        response: { data: { detail: string | Array<{ msg: string }> } };
+      };
+      const errorDetail = axiosError.response?.data?.detail;
 
+      if (
+        typeof errorDetail === 'string' &&
+        errorDetail.includes('already exists')
+      ) {
+        return 'Este e-mail já está cadastrado';
+      }
+
+      if (Array.isArray(errorDetail)) {
+        const emailError = errorDetail.find((err) =>
+          err.msg?.includes('already exists')
+        );
+        if (emailError) {
+          return 'Este e-mail já está cadastrado';
+        }
+      }
+    }
+    return 'Erro ao criar conta';
+  }
+
+  async function handleSignUp(data: SignUpForm) {
+    setApiError('');
     try {
       await registerUser({
         name: data.name,
         email: data.email,
         password: data.password,
       });
-
-      // Redireciona para login após cadastro bem-sucedido
       navigate('/sign-in');
     } catch (error) {
-      // Verifica se é erro de email já existente
-      if (error && typeof error === 'object' && 'response' in error) {
-        const axiosError = error as {
-          response: { data: { detail: string | Array<{ msg: string }> } };
-        };
-        const errorDetail = axiosError.response?.data?.detail;
-
-        if (
-          typeof errorDetail === 'string' &&
-          errorDetail.includes('already exists')
-        ) {
-          setApiError('Este e-mail já está cadastrado');
-          return;
-        }
-
-        if (Array.isArray(errorDetail)) {
-          const emailError = errorDetail.find(
-            (err) => err.msg && err.msg.includes('already exists')
-          );
-          if (emailError) {
-            setApiError('Este e-mail já está cadastrado');
-            return;
-          }
-        }
-      }
-
-      // Erro genérico para qualquer outro caso
-      setApiError('Erro ao criar conta');
+      setApiError(extractApiError(error));
     }
   }
 
@@ -147,21 +146,18 @@ export function SignUp() {
                 />
               </div>
 
-              {/* Exibe todos os erros no final do formulário */}
               {(Object.values(errors).length > 0 || apiError) && (
                 <div className="mt-4 space-y-1">
-                  {/* Erros de validação */}
-                  {Object.values(errors).map((err, idError) => (
+                  {Object.entries(errors).map(([field, err]) => (
                     <p
                       className="flex gap-2 text-brand-content-body text-sm"
-                      key={idError}
+                      key={field}
                     >
                       <img alt="simbolo de X" src={xSvg} />
                       {err?.message?.toString()}
                     </p>
                   ))}
 
-                  {/* Erro da API */}
                   {apiError && (
                     <p className="flex gap-2 text-brand-content-body text-sm">
                       <img alt="simbolo de X" src={xSvg} />

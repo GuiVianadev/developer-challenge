@@ -7,9 +7,19 @@
         "noImgElement": "off",
         "noNamespaceImport": "off"
       },
+      "suspicious": {
+        "noDebugger": "off"
+      },
       "nursery": {
         "useImageSize": "off"
-      }
+      },
+      "a11y": {
+        "useSemanticElements": "off",
+        "noNoninteractiveElementInteractions": "off",
+        "useKeyWithClickEvents": "off",
+        "noStaticElementInteractions": "off"
+      },
+      "recommended": false
     }
   }
 }

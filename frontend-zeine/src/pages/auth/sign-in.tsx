@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import xSvg from '../../assets/x.svg';
 
+const BAD_REQUEST = 400;
+
 const signInForm = z.object({
   email: z.email('Digite um e-mail válido'),
   password: z.string().min(1, 'Senha é obrigatória'),
@@ -51,7 +53,7 @@ export function SignIn() {
       if (error && typeof error === 'object' && 'response' in error) {
         const axiosError = error as { response: { status: number } };
 
-        if (axiosError.response?.status === 400) {
+        if (axiosError.response?.status === BAD_REQUEST) {
           setApiError('E-mail ou senha incorretos');
           return;
         }
@@ -102,10 +104,10 @@ export function SignIn() {
 
               {(Object.values(errors).length > 0 || apiError) && (
                 <div className="mt-4 space-y-1">
-                  {Object.values(errors).map((err, idError) => (
+                  {Object.entries(errors).map(([field, err]) => (
                     <p
                       className="flex gap-2 text-brand-content-body text-sm"
-                      key={idError}
+                      key={field}
                     >
                       <img alt="simbolo de X" src={xSvg} />
                       {err?.message?.toString()}

@@ -43,6 +43,10 @@ export async function createContact(
     formData.append('reference', contact.reference);
   }
 
+  if (contact.foto && contact.foto instanceof File) {
+    formData.append('foto', contact.foto);
+  }
+
   const response = await api.post('/contacts/', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
