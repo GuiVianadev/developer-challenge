@@ -76,7 +76,7 @@ export function HeaderContact({
                 </DialogTrigger>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Clique para adicionar um novo contato</p>
+                <p>“Tá esperando o quê? Boraa moeer!! 🚀”</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
