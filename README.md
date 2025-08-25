@@ -75,7 +75,7 @@ source venv/bin/activate  # ou .\venv\Scripts\activate no Windows
 pip install -r requirements.txt
 
 alembic upgrade head  # rodar migrations
-uvicorn app.main:app --reload
+uvicorn app.main:app --reload ou task run
 ```
 
 API disponível em:  
@@ -265,8 +265,4 @@ App disponível em:
 ---
 ### Video da aplicação
 
-(https://youtu.be/0dAiLo0q_Io)
-
-
-- **Testes unitários** com Pytest (se aplicável).  
-- Docker para provisionamento do banco.  
+(https://youtu.be/0dAiLo0q_Io)  
